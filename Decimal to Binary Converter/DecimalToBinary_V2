@@ -1,0 +1,49 @@
+package converter;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class DecimalToBinary {
+	
+	public DecimalToBinary() {
+		
+		boolean checker = false;
+		int number = 0; 
+		String binary = "";
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Type a whole number: ");
+		
+		
+		do{
+			checker = true;
+			try {
+				number = Integer.parseInt(br.readLine().trim());
+			} catch (Exception e) {
+				System.out.println("Wrong format input. Please, use only numbers.");
+				checker = false;
+			}
+		}while (checker != true);
+				
+		if (number == 0){
+			binary = "0";
+		} else {
+			while (number > 0){
+				if (number % 2 == 0){
+					binary = "0" + binary;
+				} else {
+					binary = "1" + binary;
+				}
+				number = (int) Math.floor(number / 2);
+			}
+		}
+		
+		System.out.println(binary);
+		
+	}
+	
+	public static void main(String[] args) {
+		new DecimalToBinary();
+	}
+
+}
