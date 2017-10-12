@@ -1,0 +1,9 @@
+package account;
+
+public class InvalidValueException extends RuntimeException {
+	
+	InvalidValueException(double value) {
+		super("Invalid ammount: " + value);
+	}
+
+}
