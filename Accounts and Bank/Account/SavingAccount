@@ -1,0 +1,20 @@
+package account;
+
+public class SavingAccount extends Account implements Comparable<Account> {
+	
+	public SavingAccount(){}
+	public SavingAccount(String named){
+		this.name = named;
+	}
+
+	@Override
+	public void applyRate(double rate) {
+		this.balance += this.balance * rate * 3;
+	}
+
+	@Override
+	public int compareTo(Account anotherAccount) {
+		return this.name.compareTo(anotherAccount.name);
+	}
+
+}
