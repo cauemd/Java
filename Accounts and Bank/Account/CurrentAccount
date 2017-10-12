@@ -1,0 +1,30 @@
+package Account;
+
+public class CurrentAccount extends Account  {
+	
+	public CurrentAccount(){}
+	
+	public CurrentAccount(String named){
+		this.name = named;
+	}
+	
+	
+	@Override
+	public void applyRate(double rate) {
+		this.balance += this.balance * rate * 2;
+	}
+
+	@Override
+	public void withdraw(double ammount) {
+		try {
+			if (this.balance < ammount){
+				throw new InsuficientBalanceException("Insuficient Balance!");
+			} else {
+				this.balance -= ammount - 0.10;
+			}
+		}catch (InsuficientBalanceException e){
+			System.out.println(e.getMessage());
+		}
+	}
+
+}
