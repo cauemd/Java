@@ -1,0 +1,32 @@
+package br.com.caueduarte.bank;
+
+import java.util.List;
+
+import br.com.caueduarte.bank.account.*;
+
+public class Bank {
+
+	protected List<Account> accounts;
+	
+	void addAccount (Account a){
+		this.accounts.add(a);
+	}
+	
+	Account getAccount(int n){
+		return this.accounts.get(n);
+	}
+	
+	public int getNumberOfAccounts(){
+		return this.accounts.size();
+	}
+	
+	Account getAccountByName(String nameCheck){
+		for (int x = 0; x < this.accounts.size(); x++){
+			if (this.accounts.get(x).getName().equals(nameCheck)){
+				return this.accounts.get(x);
+			}
+		}
+		return null;
+	}
+	
+}
