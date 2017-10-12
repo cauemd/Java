@@ -1,0 +1,41 @@
+package br.com.caueduarte.bank;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.caueduarte.bank.account.*;
+import br.com.caueduarte.bank.account.CurrentAccount;
+import br.com.caueduarte.bank.account.SavingAccount;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		
+		Account ca1 = new CurrentAccount("John");
+		ca1.deposit(20000);
+		
+		Account ca2 = new CurrentAccount("Jeff");
+		ca2.deposit(3000);
+		
+		Account sa1 = new SavingAccount("James");
+		
+		Bank bankTest = new Bank();
+		List<Account> accountList = new ArrayList<>();
+		bankTest.accounts = accountList;
+		
+		bankTest.addAccount(ca1);
+		bankTest.addAccount(ca2);
+		bankTest.addAccount(sa1);
+		
+		try{
+		System.out.println(bankTest.getAccountByName("Jhn").getBalance());
+		} catch (NullPointerException e) {
+			System.out.println("Our bank has no account under this name!");
+			
+		}
+		
+	}
+
+}
