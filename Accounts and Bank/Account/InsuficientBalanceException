@@ -1,0 +1,11 @@
+package account;
+
+//"Exception" is a checked exception, which means that the one that should treat the exception is the one calling in,
+//in this case the method "withdraw".
+public class InsuficientBalanceException extends Exception {
+	
+	InsuficientBalanceException(String message){
+		super(message);
+	}
+
+}
