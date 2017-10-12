@@ -1,11 +1,11 @@
-package br.com.caueduarte.bank;
+package bank;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.caueduarte.bank.account.*;
-import br.com.caueduarte.bank.account.CurrentAccount;
-import br.com.caueduarte.bank.account.SavingAccount;
+import account.*;
+import CurrentAccount;  //This should not be needed
+import SavingAccount;  //This should not be needed
 
 public class Main {
 
