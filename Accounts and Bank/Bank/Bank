@@ -1,8 +1,8 @@
-package br.com.caueduarte.bank;
+package br.bank;
 
 import java.util.List;
 
-import br.com.caueduarte.bank.account.*;
+import account.*;
 
 public class Bank {
 
