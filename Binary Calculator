@@ -1,0 +1,695 @@
+/* 	Name = Cauê Meireles Duarte
+	Student Number = 2017228
+	Class A
+*/
+
+package project;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class MathAndProgramCA {
+	
+	//Formated to be composed of 16 bits + "." + 4 more bits
+	String number1_Global = "";
+	boolean isNumber1negative = false;
+	String number2_Global = "";
+	boolean isNumber2negative = false;
+	
+	public MathAndProgramCA(){
+		
+		welcome();
+		conversionMenu();
+		exit();
+
+	}
+
+	public void welcome() {
+		System.out.println("Welcome to your trusty calculator! You'll be given the operation menu after storing two numbers in the system. "
+				+ "\nPlease, choose your option:");
+		
+	}
+	
+	public void conversionMenu() {
+		
+		System.out.println("_______________________________________________" +
+						 "\nA - Binary to Decimal Conversion" +
+						 "\nB - Decimal to Binary Conversion" +
+						 "\nC - Quit" + 
+						 "\n_______________________________________________");
+		
+		String input = getUserInput().toUpperCase();
+		if(input.equals("A")){
+			binToDec();
+			
+		}else if (input.equals("B")){
+			decToBin();
+			
+		}else if(input.equals("C")){
+			return;
+		}else{	
+			System.out.println("Invalid Option! Please try again!");
+			conversionMenu();
+		}
+	}
+
+	public void operationMenu() {
+		
+		System.out.println("_______________________________________________" +
+					 	 "\nA - Addition" +
+						 "\nB - Subtraction" +
+						 "\nC - Multiplication" +
+						 "\nD - Division" +
+						 "\nE - Quit" + 
+						 "\n_______________________________________________");
+		
+		String input = getUserInput().toUpperCase();
+		
+		//addition
+		if(input.equals("A")){
+			if(isNumber1negative == false && isNumber2negative == false){
+			System.out.println("The result of " + number1_Global + " plus " + number2_Global + " equals " + addition(number1_Global, number2_Global) + ".");
+			System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " plus " + realBinaryToDecimal(number2_Global) + 
+					" equals " + realBinaryToDecimal(addition(number1_Global, number2_Global)) + ".");
+			System.out.println("_______________________________________________");
+			returnMenu();
+			} else if (isNumber1negative == true && isNumber2negative == true){
+				System.out.println("The result of " + number1_Global + " plus " + number2_Global + " equals " + addition(number1_Global, number2_Global) + ".");
+				System.out.println("In decimal form, -" + realBinaryToDecimal(twosComplement(number1_Global)) + " plus -" + realBinaryToDecimal(twosComplement(number2_Global)) + 
+						" equals -" + realBinaryToDecimal(twosComplement(addition(number1_Global, number2_Global))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+			} else if (isNumber1negative == true && isNumber2negative == false){
+				System.out.println("The result of " + number1_Global + " plus " + number2_Global + " equals " + addition(twosComplement(number1_Global), number2_Global) + ".");
+				System.out.println("In decimal form, -" + realBinaryToDecimal(twosComplement(number1_Global)) + " plus " + realBinaryToDecimal(number2_Global) + 
+						" equals " + realBinaryToDecimal(addition(twosComplement(number1_Global), number2_Global)) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+			} else {
+				System.out.println("The result of " + number1_Global + " plus " + number2_Global + " equals " + addition(number1_Global, twosComplement(number2_Global)) + ".");
+				System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " plus -" + realBinaryToDecimal(twosComplement(number2_Global)) + 
+						" equals " + realBinaryToDecimal(addition(number1_Global, number2_Global)) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+			}
+			
+		//subtraction
+		}else if(input.equals("B")){
+			if(isNumber1negative == false && isNumber2negative == false){
+				System.out.println("The result of " + number1_Global + " minus " + number2_Global + " equals " + addition(number1_Global, twosComplement(number2_Global)) + ".");
+				System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " minus " + realBinaryToDecimal(number2_Global) + 
+						" equals " + realBinaryToDecimal(addition(number1_Global, twosComplement(number2_Global))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+				} else if (isNumber1negative == true && isNumber2negative == true){
+					System.out.println("The result of -" + number1_Global + " minus -" + number2_Global + " equals " + addition(number1_Global, twosComplement(number2_Global)) + ".");
+					System.out.println("In decimal form, -" + realBinaryToDecimal(twosComplement(number1_Global)) + " minus -" + realBinaryToDecimal(twosComplement(number2_Global)) + 
+							" equals -" + realBinaryToDecimal(twosComplement(addition(number1_Global, twosComplement(number2_Global)))) + ".");
+					System.out.println("_______________________________________________");
+					returnMenu();
+				} else if (isNumber1negative == true && isNumber2negative == false){
+					System.out.println("The result of " + number1_Global + " minus " + number2_Global + " equals " + addition(number1_Global, number2_Global) + ".");
+					System.out.println("In decimal form, -" + realBinaryToDecimal(twosComplement(number1_Global)) + " minus " + realBinaryToDecimal(number2_Global) + 
+							" equals -" + realBinaryToDecimal(addition(twosComplement(number1_Global), number2_Global)) + ".");
+					System.out.println("_______________________________________________");
+					returnMenu();
+				} else {
+					System.out.println("The result of " + number1_Global + " minus " + number2_Global + " equals " + addition(number1_Global, twosComplement(number2_Global)) + ".");
+					System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " minus -" + realBinaryToDecimal(twosComplement(number2_Global)) + 
+							" equals " + realBinaryToDecimal(addition(number1_Global, twosComplement(number2_Global))) + ".");
+					System.out.println("_______________________________________________");
+					returnMenu();
+				}
+			
+		//multiplication	
+		}else if(input.equals("C")){
+			if(isNumber1negative == false && isNumber2negative == false){
+				System.out.println("The result of " + number1_Global + " times " + number2_Global + " equals " 
+						+ padding(multiplication(number1_Global, number2_Global)) + ".");
+				System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " times " + realBinaryToDecimal(number2_Global) + 
+						" equals " + realBinaryToDecimal(padding(multiplication(number1_Global, number2_Global))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();	
+			}else if(isNumber1negative == true && isNumber2negative == true){
+			System.out.println("The result of " + number1_Global + " times " + number2_Global + " equals " 
+					+ padding(multiplication(twosComplement(number1_Global), twosComplement(number2_Global))) + ".");
+			System.out.println("In decimal form, -" + (realBinaryToDecimal(twosComplement(number1_Global))) + " times -" + (realBinaryToDecimal(twosComplement(number2_Global))) + 
+						" equals " + realBinaryToDecimal(padding((multiplication(twosComplement(number1_Global), twosComplement(number2_Global))))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+			} else if(isNumber1negative == true && isNumber2negative == false){
+				System.out.println("The result of " + number1_Global + " times " + number2_Global + " equals -" 
+						+ twosComplement(padding(multiplication(twosComplement(number1_Global), number2_Global))) + ".");
+				System.out.println("In decimal form, -" + realBinaryToDecimal(twosComplement(number1_Global)) + " times " + realBinaryToDecimal(number2_Global) + 
+						" equals -" + realBinaryToDecimal(padding(multiplication(twosComplement(number1_Global) , number2_Global))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();	
+			}else{
+				System.out.println("The result of " + number1_Global + " times " + number2_Global + " equals -" 
+						+ twosComplement(padding(multiplication(number1_Global, twosComplement(number2_Global)))) + ".");
+				System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " times -" + realBinaryToDecimal(twosComplement(number2_Global)) + 
+						" equals -" + realBinaryToDecimal(padding(multiplication(number1_Global , twosComplement(number2_Global)))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+			}
+			
+		//division	
+		}else if(input.equals("D")){
+			if(isNumber1negative == false && isNumber2negative == false){
+				System.out.println("The result of " + number1_Global + " divided by " + number2_Global + " equals " 
+						+ padding(division(number1_Global, number2_Global)) + ".");
+				System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " divided by " + realBinaryToDecimal(number2_Global) + 
+						" equals " + realBinaryToDecimal(padding(division(number1_Global, number2_Global))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();	
+			}else if(isNumber1negative == true && isNumber2negative == true){
+			System.out.println("The result of " + number1_Global + " divided by " + number2_Global + " equals " 
+					+ padding(division(twosComplement(number1_Global), twosComplement(number2_Global))) + ".");
+			System.out.println("In decimal form, -" + (realBinaryToDecimal(twosComplement(number1_Global))) + " divided by -" + (realBinaryToDecimal(twosComplement(number2_Global))) + 
+						" equals " + realBinaryToDecimal(padding((division(twosComplement(number1_Global), twosComplement(number2_Global))))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+			} else if(isNumber1negative == true && isNumber2negative == false){
+				System.out.println("The result of " + number1_Global + " divided by " + number2_Global + " equals " 
+						+ twosComplement(padding(division(twosComplement(number1_Global), number2_Global))) + ".");
+				System.out.println("In decimal form, -" + realBinaryToDecimal(twosComplement(number1_Global)) + " divided by " + realBinaryToDecimal(number2_Global) + 
+						" equals -" + realBinaryToDecimal(padding(division(twosComplement(number1_Global) , number2_Global))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();	
+			}else{
+				System.out.println("The result of " + number1_Global + " divided by " + number2_Global + " equals " 
+						+ twosComplement(padding(division(number1_Global, twosComplement(number2_Global)))) + ".");
+				System.out.println("In decimal form, " + realBinaryToDecimal(number1_Global) + " divided by -" + realBinaryToDecimal(twosComplement(number2_Global)) + 
+						" equals -" + realBinaryToDecimal(padding(division(number1_Global , twosComplement(number2_Global)))) + ".");
+				System.out.println("_______________________________________________");
+				returnMenu();
+			}
+			
+		}else if(input.equals("E")){
+			return;
+			
+		}else {
+			System.out.println("Invalid Option! Please try again!");
+			operationMenu();
+		}
+		
+	}
+	
+	//ASKS IF THE USER WANTS TO RETURN TO THE MENU OR QUIT
+	private void returnMenu(){
+		System.out.println("Would you like to perform other operations with the numbers? [Y/N]");
+		String input = getUserInput().toUpperCase();
+		if(input.equals("Y")){
+			operationMenu();
+		} else if (input.equals("N")){
+			return;
+		} else {
+			System.out.println("Invalid Option!");
+			returnMenu();
+		}
+	}
+	
+
+	//INTERFACE AND VERIFICATION PART OF THE CONVERSION FROM BINARY TO DECIMAL
+	private void binToDec() {
+		
+		System.out.println("Please, enter your binary number (this system uses an 16 bits, signed format): ");
+		String binary = "";
+		boolean verification = false;
+		
+		do{
+			binary = getUserInput();
+			if ((binary.matches("[01.]+")) && (binary.indexOf('.') == binary.lastIndexOf('.')) &&
+					!(binary.lastIndexOf('.') == binary.length() - 1)){
+				if (binary.length() <= 16 || (binary.indexOf('.') <= 17)){
+					verification = true;
+				}else {
+					System.out.println("This system uses an 16 bit format. Please use the appropriated number of digits.");
+				verification =  false;
+				}
+			} else {
+				System.out.println("The number used is not a binary. Make sure only to use \"1\"s, \"0\"s and one floating point. Try again:");
+			}
+		}while (verification == false);
+
+		//checking if signed
+		if (binary.charAt(0) == '1' && binary.length() >= 16){
+			System.out.println("Is this a signed number? [Y/N]");
+			do{
+				verification = false;
+				String input = getUserInput().trim().toUpperCase();
+				if (input.equals("Y")){
+					verification = true;
+
+					if(!binary.contains(".")){
+						System.out.println("The binary " + binary + " converted do decimal equals to -" 
+								+ natBinaryToDecimal(twosComplement(binary + ".0000")) + ".");
+						if(number1_Global.isEmpty()){
+							isNumber1negative = true;
+						}else{
+							isNumber2negative = true;
+						}
+						saveNumberInGlobal(binary + ".0000");
+						
+					}else{
+						System.out.println("The binary " + binary + " converted do decimal equals to -" 
+								+ realBinaryToDecimal(twosComplement(binary)) + ".");
+						if(number1_Global.isEmpty()){
+							isNumber1negative = true;
+						}else{
+							isNumber2negative = true;
+						}
+						while (binary.length() < 21){
+							binary = binary + "0";
+						}
+						if (binary.length() > 21){
+							binary = binary.substring(0, 22);
+						}
+						saveNumberInGlobal(binary);
+					}
+					System.out.println("Returning to the menu.");
+					if (number1_Global.isEmpty() || number2_Global.isEmpty()){
+						conversionMenu();
+					} else {
+						operationMenu();
+					}
+					return;
+				} else if (input.equals("N")){
+					verification = true;
+				} else {
+					System.out.println("Please, type only \"Y\" or \"N\"");
+				}
+			}while(verification == false);
+		}
+			
+			//for non-signed numbers	
+			binary = padding(binary);
+			if (!binary.contains(".")){
+				System.out.println("The binary " + binary + " converted do decimal equals to " + natBinaryToDecimal(binary) + ".");
+				binary = binary + ".0000";
+				if(number1_Global.isEmpty()){
+					isNumber1negative = false;
+				}else{
+					isNumber2negative = false;
+				}
+				saveNumberInGlobal(binary);
+			}else{
+				System.out.println("The binary " + binary + " converted do decimal equals to " + realBinaryToDecimal(binary) + ".");
+				if(number1_Global.isEmpty()){
+					isNumber1negative = false;
+				}else{
+					isNumber2negative = false;
+				}
+				while (binary.length() < 21){
+					binary = binary + "0";
+				}
+				if (binary.length() > 21){
+					binary = binary.substring(0, 22);
+				}
+				saveNumberInGlobal(binary);
+			}
+		
+		System.out.println("Returning to the menu.");
+		if (number1_Global.isEmpty() || number2_Global.isEmpty()){
+			conversionMenu();
+		} else {
+			operationMenu();
+		}
+
+	}
+	
+	//INTERFACE AND VERIFICATION PART OF THE CONVERSION FROM DECIMAL TO BINARY
+	private void decToBin() {
+		
+		String decimal = "";
+		boolean validation = false; 
+		System.out.println("Enter your decimal number: ");
+
+		do{
+
+			decimal = getUserInput();
+			if( decimal.matches("[0-9.-]+") && (decimal.indexOf('.') == decimal.lastIndexOf('.'))
+					&& !(decimal.lastIndexOf('.') == decimal.length() - 1 )){
+				if( decimal.lastIndexOf('-') == -1 || decimal.lastIndexOf('-') == 0){
+					if(Double.parseDouble(decimal) < 32769 && Double.parseDouble(decimal) > -32768){
+						validation = true;
+					}else{
+						System.out.println("This system uses an 16 bits format with signed numbers."
+								+ " You can only use numbers from -32768 to 32769.");
+					}
+				}
+			}else {
+				System.out.println("Please, use only numbers and no more than one floating point or minus sign. Try again: ");
+			}
+		}while(validation == false);
+
+		//treating negative numbers
+		if(decimal.charAt(0) == '-'){
+			if(!decimal.contains(".")){
+				System.out.println("The decimal " + decimal + " converted to binary equals to " 
+			+  twosComplement(padding(natDecimalToBinary(decimal.substring(1))) + ".0000"));
+				saveNumberInGlobal(padding(natDecimalToBinary(decimal.substring(1)) + ".0000"));
+				if(number1_Global.isEmpty()){
+					isNumber1negative = true;
+				}else{
+					isNumber2negative = true;
+				}
+			} else {
+				System.out.println("The decimal " + decimal + " converted to binary equals to " +  twosComplement(padding(realDecimalToBinary(decimal.substring(1)))));
+				saveNumberInGlobal(padding(realDecimalToBinary(decimal.substring(1))));
+				if(number1_Global.isEmpty()){
+					isNumber1negative = true;
+				}else{
+					isNumber2negative = true;
+				}
+			}	
+						
+		} else {
+			//treating positive numbers
+			if(!decimal.contains(".")){
+				System.out.println("The decimal " + decimal + " converted to binary equals to " + padding(natDecimalToBinary(decimal))
+				+ ".0000.");
+				saveNumberInGlobal(padding(natDecimalToBinary(decimal) + ".0000"));
+				if(number1_Global.isEmpty()){
+					isNumber1negative = false;
+				}else{
+					isNumber2negative = false;
+				}
+			} else {
+				System.out.println("The decimal " + decimal + " converted to binary equals to " + padding(realDecimalToBinary(decimal)) + ".");
+				saveNumberInGlobal(padding(realDecimalToBinary(decimal)));
+				if(number1_Global.isEmpty()){
+					isNumber1negative = false;
+				}else{
+					isNumber2negative = false;
+				}
+			}
+		}
+				
+		System.out.println("Returning to the menu.");
+		if (number1_Global.isEmpty() || number2_Global.isEmpty()){
+			conversionMenu();
+		} else {
+			operationMenu();
+		}
+	}
+		
+	//ADD TWO BINARY NUMBERS TOGETHER AND RETURNS THE RESULT
+	private String addition(String term1, String term2) {
+				
+	String[] number1 = term1.split("[.]");
+	String[] number2 = term2.split("[.]");	
+	
+	String number1NoFloat = number1[0] + number1[1];
+	String number2NoFloat = number2[0] + number2[1];
+	
+	//using row 0 and 1 for the terms, 2 for carry overs and 3 for the result
+	char[][] binaryAddition = new char[4][20];
+	
+	binaryAddition[0] = number1NoFloat.toCharArray();
+	binaryAddition[1] = number2NoFloat.toCharArray();
+	binaryAddition[2] = "00000000000000000000".toCharArray();
+	
+	//try-catch to catch Array-out-of-bounds caused by adding signed numbers
+	try{
+		for (int x = 19; x >= 0; x--){
+			if(binaryAddition[0][x] == '0' && binaryAddition[1][x] == '0' && binaryAddition[2][x] == '0'){
+				binaryAddition[3][x] = '0';
+				
+			} else if (binaryAddition[0][x] == '1' && binaryAddition[1][x] == '0' && binaryAddition[2][x] == '0' ||
+					   binaryAddition[0][x] == '0' && binaryAddition[1][x] == '1' && binaryAddition[2][x] == '0' ||
+					   binaryAddition[0][x] == '0' && binaryAddition[1][x] == '0' && binaryAddition[2][x] == '1'){
+				binaryAddition[3][x] = '1';
+				
+			} else if (binaryAddition[0][x] == '1' && binaryAddition[1][x] == '1' && binaryAddition[2][x] == '0'||
+				       binaryAddition[0][x] == '1' && binaryAddition[1][x] == '0' && binaryAddition[2][x] == '1'||
+					   binaryAddition[0][x] == '0' && binaryAddition[1][x] == '1' && binaryAddition[2][x] == '1'){
+				binaryAddition[3][x] = '0';
+				binaryAddition[2][x-1] = '1';
+				
+			} else {
+				binaryAddition[3][x] = '1';
+				binaryAddition[2][x-1] = '1';
+			}
+		}
+	}catch(Exception e){};
+	
+		String finalResult = String.valueOf(binaryAddition[3]);
+		
+		return finalResult.substring(0, 16) + "." + finalResult.substring(16);
+	}
+
+//	//NEGATES THE SECOND NUMBER, THEN USES THE ADDITION METHOD TO GET THE RESULT (COULD BE IMPLEMENTED, BUT I CHOSE TO USE ADDITION + TWO COMPLEMENT INSTEAD.
+//	private String subtraction(String term1, String term2) {
+//		String[] number1 = term1.split("[.]");
+//		String[] number2 = term2.split("[.]");	
+//		
+//		String number1NoFloat = number1[0] + "." + number1[1];
+//		String number2NoFloat = number2[0] + "." + number2[1];
+//		
+//		String negativeTerm2 = twosComplement(number2NoFloat);
+//		String finalResult = addition(number1NoFloat, negativeTerm2);
+//		
+//		return finalResult.substring(0, 16) + "." + finalResult.substring(17);
+//		
+//	}
+
+	//RETURNS THE RESULT OF THE FIRST NUMBER TIMES THE SECOND ONE
+	private String multiplication(String number1, String number2) {
+
+		String[] temp1 = number1.split("[.]");
+		String[] temp2 = number2.split("[.]");
+
+		String num1 = temp1[0] + temp1[1];
+		String num2 = temp2[0] + temp2[1];
+		String result = "0000000000000000.0000";
+		String counter = "";
+
+		//removing the leading "0"
+		for (int x = 0; x < num1.length(); x++){
+			if (num1.charAt(x) == '1'){
+				num1 = num1.substring(x);
+				break;
+			}
+		}
+		for (int x = 0; x < num2.length(); x++){
+			if (num2.charAt(x) == '1'){
+				num2 = num2.substring(x);
+				break;
+			}
+		}
+
+		for (int x = num2.length() - 1; x >= 0; x--){
+			if (num2.charAt(x) == '1'){
+				String temp = num1 + counter;
+
+				result = addition(result, padding(temp.substring(0, temp.length() - 4) + "." + temp.substring(temp.length() - 4)));
+			}
+			counter += "0";
+		}
+
+		String[] finalResult = result.split("[.]");
+		return finalResult[0].substring(0, finalResult[0].length() - 4) + "." + finalResult[0].substring(finalResult[0].length() - 4);
+	}
+
+	//RETURNS THE DIVISION OF THE FIRST NUMBER BY THE SECOND
+	private String division(String number1, String number2) {
+		
+		String[] temp1 = number1.split("[.]");
+		String[] temp2 = number2.split("[.]");
+
+		String dividend = temp1[0] + temp1[1];
+		String divisor = temp2[0] + temp2[1];
+		String result = "";
+		
+		//removing the leading "0"
+		for (int x = 0; x < dividend.length(); x++){
+			if (dividend.charAt(x) == '1'){
+				dividend = dividend.substring(x);
+				break;
+			}
+		}
+		for (int x = 0; x < divisor.length(); x++){
+			if (divisor.charAt(x) == '1'){
+				divisor = divisor.substring(x);
+				break;
+			}
+		}
+		
+		//Problem solving part
+		String problem = "";
+		for (int x = 0; x < dividend.length(); x++){
+
+			problem += String.valueOf(dividend.charAt(x));
+			int n1 = Integer.parseInt(divisor, 2);
+			int n2 = Integer.parseInt(problem, 2);
+			int n3 = n2 - n1;
+
+			if(n3 >= 0){
+				result += "1";
+				problem = Integer.toBinaryString(n3);
+			} else {
+				if (!result.isEmpty()){
+					result += "0";
+				}
+			}
+
+		}
+			
+		return padding(result + ".0000");
+		
+	}
+	
+	//DISPLAYS FAREWELL MESSAGE
+	public void exit(){
+		System.out.println("Thank you and have a nice day!");
+	}
+
+	//ADDS PADDING ON THE LEFT IN CASE THE BINARY GIVEN HAS LESS THAN 16 BITS
+	public String padding(String binary){
+
+		//for real binary
+		if (binary.contains(".")){
+			String[] padded = binary.split("[.]");
+			if (padded[0].length() < 16){
+				String newPadded = padded[0];
+				for (int x = 0; x < 16 - padded[0].length(); x++){
+					newPadded = "0" + newPadded; 
+				}
+			padded[0] = newPadded;	
+			}
+			return padded[0] + "." + padded[1];
+			
+		//for natural binary	
+		} else {
+			String padded = binary;
+			if (padded.length() < 16){
+				for (int x = 0; x < 16 - binary.length(); x++){
+					padded = "0" + padded; 
+				}
+			}
+			return padded;
+		}
+
+	}
+	
+	//RETURNS THE SIGNED FORM OF A NEGATIVE BINARY
+	public String twosComplement (String binary){
+		
+		String[] signedNumber = binary.split("[.]");
+		signedNumber[0] = signedNumber[0].replace('0', '2');
+		signedNumber[0] = signedNumber[0].replace('1', '0');
+		signedNumber[0] = signedNumber[0].replace('2', '1');
+		String conversion = signedNumber[0] + "." + signedNumber[1];
+		conversion = addition(conversion, "0000000000000001.0000");
+		
+		return conversion;
+	}
+
+	//CONVERTS A NATURA DECIMAL NUMBER TO BINARY
+	public String natDecimalToBinary(String decimal){
+		
+		String binary = "";
+		int number = Integer.parseInt(decimal);
+		
+		if (number == 0){
+			binary = "0";
+		} else {
+			while (number > 0){
+				if (number % 2 == 0){
+					binary = "0" + binary;
+				} else {
+					binary = "1" + binary;
+				}
+				number = (int) Math.floor(number / 2);
+			}
+		}
+		
+		return binary;
+	}
+	
+	//CONVERTS A REAL DECIMAL NUMBER TO BINARY
+	public String realDecimalToBinary(String decimal){
+		
+		String[] binary = decimal.split("[.]");
+		String integerString = natDecimalToBinary(binary[0]);
+		double floatNumber = Double.parseDouble("0." + binary[1]);
+		String floatString = "";
+		
+						
+		for (int x = 0; x <= 3; x++){
+			if (floatNumber * 2 >= 1){
+				floatString = floatString + "1";
+				floatNumber = (floatNumber * 2) - 1;
+			} else {
+				floatString = floatString + "0";
+				floatNumber = floatNumber * 2;
+			}
+		}
+		
+		return integerString + "." + floatString;
+	}
+	
+	//CONVERTS A NATURAL BINARY NUMBER TO DECIMAL
+	public int natBinaryToDecimal(String binary){
+
+		int conversion = 0;
+		char[] binaryArray = binary.toCharArray();
+
+		for( int x = binaryArray.length - 1; x >= 0; x-- ){
+			if (binaryArray[x] == '1'){
+				conversion = (int) (conversion + Math.pow( 2, (15 - x)));
+			}
+		}
+				
+		return conversion;
+	}
+	
+	//CONVERTS A REAL BINARY NUMBER TO DECIMAL
+	public String realBinaryToDecimal(String binary){
+		
+		String[] conversion = binary.split("[.]");
+		double integerPart = natBinaryToDecimal(conversion[0]);
+		double floatPart = 0;
+		
+		for (int x = 0; x < conversion[1].length(); x++){
+			if (conversion[1].charAt(x) == '1'){
+				floatPart = floatPart + Math.pow(0.5, x + 1);
+			}
+		}
+				
+		return String.valueOf(integerPart +floatPart);
+	}
+	
+	//READS AND RETURN AN INPUT FROM THE KEYBOARD USING A BUFFERED READER
+	public String getUserInput() {
+		 String input = "";
+		 try {
+			 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			 input = br.readLine().trim();
+		 } catch (Exception e)	{}
+		 return input;
+	}
+	
+	//CHECKS IF THE USER WANTS TO SAVE THE CONVERTED NUMBER IN THE GLOBAL VARIABLES
+	public void saveNumberInGlobal(String binary){
+
+		System.out.println("Do you wish to save this value for further operations? [Y/N]");
+		String input = getUserInput().toUpperCase();
+		if (input.equals("Y")){
+			if(number1_Global.equals("")){
+				number1_Global = binary;
+			} else {
+				number2_Global = binary;
+			}
+			
+		}
+	}
+	
+	public static void main(String[] args) {
+		
+		new MathAndProgramCA();
+		
+	}
+
+}
