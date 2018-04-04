@@ -1,0 +1,263 @@
+/*
+ * Project made by:
+ * Caue Meireles Duarte
+ * Student Number: 2017228
+ * 
+ */
+
+package battleships;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Game {
+
+	//Game class parameters
+	ArrayList<Player> playersList;
+	GameBoard gameBoard;
+	boolean[][] shipMap;
+	int shipSize = 0;
+
+	//default constructor
+	public Game() {
+		
+		System.out.println("Welcome to BattleShips! Good Luck!");
+		createPlayers();
+		createBoard();
+		createShips();
+		startGame();
+
+
+	}
+
+	// Take care of all gaming functions (showing board, allowing players to play in order, showing board and changing score) 
+	public void startGame() {
+		int numberOfHits = 0;
+		boolean validation = false;
+		//for each loop to run through array with all players giving each a turn in order, adding or reducing score in case of hit or miss
+		while (validation == false){
+			for(Player player:this.playersList){
+				this.gameBoard.drawGrid();
+				System.out.println(player.getName() + "'s turn!");
+				if (playerShot()){
+					player.setScore(player.getScore() + 20);
+					numberOfHits++;
+
+					//checks to see if the ship was sunk (all ship tiles where selected and calls endGame method if that's the case)
+					if (numberOfHits == this.shipSize){
+						//validation = true;
+						endGame();
+						return;
+					}	
+				} else {
+					player.setScore(player.getScore() -10);
+
+				}
+			}
+		}
+
+	}
+	
+	//shows last board and the player with the highest score 
+	private void endGame() {
+		
+		String winnerName = "";
+		int winnerScore = 0;
+		boolean tie = true;
+		//getting winner name and score
+		
+		for(Player player:this.playersList){
+			if(player.getScore() > winnerScore){
+				winnerScore = player.getScore();
+				winnerName = player.getName();
+				tie = false;
+			} else if (player.getScore() == winnerScore){
+				tie = true;
+			}
+		}
+		
+		System.out.println("Final Battlefield:");
+		this.gameBoard.drawGrid();
+		System.out.print("Game Over! The Winner was");
+		try {
+			Thread.sleep(1000);
+			System.out.print(".");
+			Thread.sleep(1000);
+			System.out.print(".");
+			Thread.sleep(1000);
+			System.out.print(".");
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {}
+		
+		//printing winner or tie
+		if (tie){
+			System.out.println("no one, it was a tie! The final score was " + winnerScore);
+		} else {	
+			System.out.print(winnerName + "!");
+			System.out.println("With a final score of " + winnerScore + "!");
+		}
+	}
+
+	//gets player shot, validates it, change the board accordingly and returns "true" for hit and "false" for miss
+	public boolean playerShot() {
+		int shotX = 21;
+		int shotY = 85;
+		boolean validation = false;
+
+		//do-while to loop until the player gets a shot in an undiscovered tile 
+		do{
+
+			//choosing a row and validation
+			do{
+				int temp = 0;
+				System.out.println("Please, select a row:");
+				try{
+					temp = Integer.parseInt(getUserInput());
+					if (temp < 1 || temp > this.gameBoard.getHeight()){
+						System.out.println("Invalid row. Please chose a number from 1 to " + this.gameBoard.getHeight());
+					} else {
+						shotX = temp - 1;
+					}
+				}catch (Exception e){
+					System.out.println("Please, use only numbers.");
+				}
+
+			} while( shotX == 21);
+
+			//choosing a column and validation using ASCII values
+			do{
+				int temp = 0;
+				System.out.println("Please, select a column:");
+				try{
+					temp = (int)  (getUserInput().toUpperCase().charAt(0));
+				}catch (Exception e){
+					System.out.println("Please, use only one letter.");
+				}
+
+				if (temp < 65 || temp > 65 + this.gameBoard.getWidth() - 1){
+					System.out.println("Invalid row. Please chose a letter from A to " + (char) (this.gameBoard.getWidth() + 64));
+				} else {
+					shotY = temp - 65;
+				}
+			} while( shotY == 85);
+
+			//checking if the chosen position was already picked
+			if (this.gameBoard.getCharInPosition(shotY,shotX) == '_'){
+				validation = true;
+			} else {
+				System.out.println("This tile was already picked. Please, try again.");
+			}
+			
+		}while (validation == false);
+		
+		//checking if there's a ship in the picked position
+		if (this.shipMap[shotY][shotX]){
+			this.gameBoard.setCharInPosition(shotY, shotX, 'H');
+			return true;
+		} else {
+			this.gameBoard.setCharInPosition(shotY, shotX, 'M');;
+			return false;
+		}	
+	}
+
+	//creates a boolean array, picks a random position in this.gameBoard and turn "ships" into "true"
+	public void createShips() {
+
+		//creating boolean array with the same size as the gameboard (all values are false by default)
+		boolean[][] ships = new boolean[this.gameBoard.getHeight()][this.gameBoard.getWidth()];
+		this.shipMap = ships;
+
+		//picking random spot for the ship, picking it's orientation and size and changing those values for "tru"
+		Random rng = new Random();
+		boolean validation = false;
+
+		do{
+			validation = true;
+			//picking beginning position
+			int shipX = rng.nextInt(this.gameBoard.getWidth());
+			int shipY = rng.nextInt(this.gameBoard.getHeight());
+
+			try{
+				//picking orientation, "true" for horizontal, "false" for vertical
+				if (rng.nextBoolean()){
+					//creating the boat to be 1/3 of the width rounded down
+					for (int x = 0; x < Math.floor(this.gameBoard.getWidth()/3); x++){
+						this.shipMap[shipY][shipX + x] = true;
+						this.shipSize++;
+					}
+				} else {
+					//creating the boat to be 1/3 of the height rounded down
+					for (int x = 0; x < Math.floor((this.gameBoard.getHeight()/3)); x++){
+						this.shipMap[shipY + x][shipX] = true;
+						this.shipSize++;
+					}
+				}
+			}catch (ArrayIndexOutOfBoundsException e){
+				validation = false;
+			}
+
+		}while(validation == false);
+
+	}
+
+	//creates a new board and saves it into "Game.gameBoard"
+	public void createBoard(){
+		GameBoard gb = new GameBoard();
+		this.gameBoard = gb;
+	}
+
+	//asks how many players [1 to 4], creates that number of Player objects and creates and save them into Game.playersList
+	public void createPlayers(){
+
+		boolean validation = false;
+		int playerNum = 0;
+
+		//creating players List
+		ArrayList<Player> playersList = new ArrayList<>();
+		this.playersList = playersList;
+
+		//asking number of players and validating
+		do{
+			System.out.println("How many players will be playing? (min 1 max 4)");
+			try{
+				playerNum = Integer.parseInt(getUserInput());
+				if (playerNum >= 1 && playerNum <= 4){
+					validation = true;
+				} else {
+					System.out.println("Please, select from 1 to 4 players. ");
+				}
+			} catch (Exception e) {
+				System.out.println("Please, use only numbers.");
+			}
+
+		}while(validation == false);
+
+		//instantiating the Player objects and saving it into Game.playersList
+		for (int x = 0; x < playerNum; x++){
+			Player player = new Player();
+			this.playersList.add(player);
+		}
+	}
+
+	//reads user input from keyboard and returns string without leading and trailing spaces
+	public String getUserInput() {
+		String input = "";
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			input = br.readLine();
+		} catch (Exception e)	{}
+		return input.trim();
+	}
+
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new Game();
+
+
+
+	}
+
+}
