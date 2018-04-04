@@ -1,0 +1,103 @@
+package battleships;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Player {
+
+	//Player class parameters
+	private String name;
+	private int age;
+	private int score = 1000;
+	private String email;
+
+	//default constructor
+	public Player() {
+		System.out.println("Please, enter player's name:");
+		setName(getUserInput());
+		System.out.println("Please, enter player's age:");
+		setAge(getUserInput());
+		System.out.println("Please, enter player's email:");
+		setEmail(getUserInput());
+		System.out.println("Player created successfully!");
+		System.out.println("----------------------------");
+
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	//saves the argument in the object's "name" parameter, validating for it to only letters and having a name and a surname (having a space)
+	public void setName(String name) {
+		if (name.matches("^[\\p{L} .'-]+$"))  {
+			if(name.contains(" ")){
+				this.name = name;
+			} else {
+				System.out.println("Please, make sure you typed your name and surname and only used letters. Try again:");
+				setName(getUserInput());
+			}			
+		} else {
+			System.out.println("Please, make sure you typed your name and surname and only used letters. Try again:");
+			setName(getUserInput());
+		}
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	//"age" parameter setter, validating for it to be only numbers and being between 12 and 100
+	public void setAge(String age) {		
+		if (age.matches("[0-9]+")){
+			int tempAge = Integer.parseInt(age);
+			if (tempAge > 12 && tempAge < 100){
+				this.age = tempAge;
+			} else {
+				System.out.println("Sorry, you must be between 12 and 100 years old to play the game! Please, try again:");	
+				setAge(getUserInput());
+			}
+		} else {
+			System.out.println("Please, make sure you used only numbers for your age: ");
+			setAge(getUserInput());
+		}
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	//"email" parameter setter, validating for it to have at least on "@" and one "."
+	public void setEmail(String email) {
+		//checks for 1 "@" (if first index = last index, there's only one of the char) and at least 1 ".", if there's any spaces,
+		//if the email doesn't start or end with "@" or "." and that there's at least 1 char between the "@" and any "."
+		if ((email.contains("@") && email.indexOf("@") == email.lastIndexOf("@")) && email.contains(".") &&
+				email.charAt(0) != '@' && email.charAt(0) != '.' && email.charAt(email.length() - 1) != '@' &&
+				email.charAt(email.length() - 1) != '.' && Math.abs(email.indexOf("@") - email.indexOf(".")) != 1){
+			this.email = email;
+		} else {
+			System.out.println("You entered an invalid email. The email has to have at least one \".\" and one \"@\"."
+					+ " Please try again:");
+			setEmail(getUserInput());
+		}
+	}
+
+	//reads user input from keyboard and returns string without leading and trailing spaces
+	public String getUserInput() {
+		String input = "";
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			input = br.readLine();
+		} catch (Exception e)	{}
+		return input.trim();
+	}
+
+}
