@@ -1,0 +1,124 @@
+package battleships;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class GameBoard {
+
+	//GameBoard class parameters
+	private int width;
+	private int height;
+	private char[][] grid; 
+
+	//default constructor
+	public GameBoard(){
+		System.out.println("Please, enter the height of your grid (it must be between 10 to 20 tiles high):");
+		setHeight(getUserInput());
+		System.out.println("Please, enter the width of your grid (it must be between 10 to 20  tiles wide):");
+		setWidth(getUserInput());
+		char[][] grid = new char[height][width];
+		this.grid = grid;
+		for (int x = 0; x < this.height; x++){
+			for(int y = 0; y < this.width; y++){
+				this.grid[x][y] = '_';
+			}
+		}
+	}
+
+	//"width" parameter setter, validating for it to be between 10 and 20
+	private void setWidth(String width) {
+		int temp;
+		//Verifying if the input is a number, else calls method again 
+		if (width.matches("[0-9]+")){
+			temp = Integer.parseInt(width);
+		} else {
+			System.out.println("Use only numbers (remembering that the width must be at least 10 tiles):");
+			setWidth(getUserInput());
+			return;
+		}
+
+		//Verifying if the input is >= 10
+		if (temp >= 10 && temp <= 20){
+			this.width = temp;
+		} else {
+			System.out.println("Make sure your width is at least 10 tiles wide, try again:");
+			setWidth(getUserInput());
+			return;
+		}
+	}
+
+
+	//"height" parameter setter, validating for it to be between 10 and 20
+	private void setHeight(String height){
+		int temp;
+		//Verifying if the input is a number, else calls method again 
+		if (height.matches("[0-9]+")){
+			temp = Integer.parseInt(height);
+		} else {
+			System.out.println("Use only numbers (remembering that the height must be at least 10 tiles):");
+			setHeight(getUserInput());
+			return;
+		}
+
+		//Verifying if the input is >= 10 && <=20
+		if (temp >= 10 && temp <= 20){
+			this.height = temp;
+		} else {
+			System.out.println("Make sure your height is at least 10 tiles high, try again:");
+			setHeight(getUserInput());
+		}
+	}
+
+	public void drawGrid(){
+		//printing top label using ASCII values for char ("A" is 65)
+		for (int x = 1; x <= this.width;x++){
+			if (x == 1){
+				System.out.print("     " + (char)(x + 64) );
+			} else {
+				System.out.print( "   " + (char)(x + 64) );
+			}
+		}
+
+		//printing left label and grid
+		for (int x = 0; x < this.height; x++){
+			System.out.println();
+			if (x < 9){
+				System.out.print( " " + ( x + 1) + " | ");
+			} else {
+				System.out.print( ( x + 1) + " | ");
+			}
+			for (int j = 0; j < this.width; j++){
+
+				System.out.print(this.grid[x][j] + " | ");
+			}
+		}
+		System.out.println("\n\"_\" for undiscovered, \"M\" for miss and \"H\" for hits!\n");
+	}
+
+	//reads user input from keyboard and returns string without leading and trailing spaces
+	public String getUserInput() {
+		String input = "";
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			input = br.readLine();
+		} catch (Exception e)	{}
+		return input.trim();
+	}
+
+	public void setCharInPosition(int x, int y, char newChar){
+		this.grid[y][x] = newChar;		
+	}
+	
+	public char getCharInPosition(int x, int y){
+		return this.grid[y][x];
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+}
